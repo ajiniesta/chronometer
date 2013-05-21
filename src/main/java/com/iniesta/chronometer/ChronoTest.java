@@ -1,9 +1,12 @@
 package com.iniesta.chronometer;
 
+import com.iniesta.chronometer.components.ChronometerComponent;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +21,7 @@ import javafx.util.Duration;
  * @author MXGTEAM4
  *
  */
-public class Chronometer extends Application{
+public class ChronoTest extends Application{
 	public static void main(String[] args){
 		launch(args);
 	}
@@ -27,9 +30,10 @@ public class Chronometer extends Application{
 	private Label labelMinutes;		
 	private int timeCounter = 0;
 	private Timeline timeline;
+	private ChronometerComponent chrono;
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(final Stage stage) throws Exception {
 		VBox vbox = new VBox(10.0);
 		vbox.setAlignment(Pos.CENTER);
 		String style = "-fx-font: 50pt \"Arial\";-fx-text-fill:  orange;";
@@ -55,11 +59,16 @@ public class Chronometer extends Application{
 			}}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		
+		chrono = new ChronometerComponent();
+		chrono.setChronoStyle(style);		
+		
 		Button start = new Button("Start");
 		start.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent arg0) {
-				timeline.playFromStart();				
+				timeline.playFromStart();
+				stage.setFullScreen(true);
+				chrono.play();
 			}
 		});
 		
@@ -67,11 +76,20 @@ public class Chronometer extends Application{
 		stop.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent arg0) {
-				timeline.stop();		
+				timeline.stop();
+				chrono.stop();
+				stage.setFullScreen(false);
 			}
 		});
 		
-		vbox.getChildren().addAll(hbox, start, stop);
+		vbox.setOnKeyPressed(new EventHandler<Event>() {
+			@Override
+			public void handle(Event event) {
+				timeline.stop();				
+			}
+		});
+		
+		vbox.getChildren().addAll(hbox, start, stop, chrono);
 		Scene scene = new Scene(vbox, 300, 300);
 		stage.setScene(scene);
 		stage.show();
