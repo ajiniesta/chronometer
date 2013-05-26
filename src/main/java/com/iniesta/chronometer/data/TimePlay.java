@@ -16,6 +16,8 @@
  */
 package com.iniesta.chronometer.data;
 
+import java.util.Date;
+
 /**
  * @author antonio
  *
@@ -23,4 +25,6 @@ package com.iniesta.chronometer.data;
 public class TimePlay {
 
 	private int playID;
+	private long time;
+	private Date datePlayed;
 }
